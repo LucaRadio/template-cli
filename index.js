@@ -20,7 +20,7 @@ let fileName;
 const input = cli.input;
 const flags = cli.flags;
 const { clear, debug } = flags;
-const absolutePath = path.resolve("../");
+const absolutePath = path.resolve("../../");
 
 
 
