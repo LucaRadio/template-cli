@@ -20,7 +20,7 @@ let fileName;
 const input = cli.input;
 const flags = cli.flags;
 const { clear, debug } = flags;
-const absolutePath = path.resolve("../../");
+const absolutePath = path.resolve("../");
 
 
 
@@ -52,7 +52,7 @@ const createFile = function (fileNameToCopy, fileName, extenction) {
 const cssOption = function (dirName) {
 	const css = ask("Do you want to add CSS file (y/n)");
 	if (css === "y") {
-		mkdir(`C:/Users/luca1/Desktop/${dirName}/css`, (error) => {
+		mkdir(`${absolutePath}/${dirName}/css`, (error) => {
 			if (error) {
 				console.log(error);
 			} else {
@@ -70,12 +70,13 @@ const cssOption = function (dirName) {
 	init({ clear });
 	input.includes(`help`) && cli.showHelp(0);
 	debug && log(flags);
+	console.log(absolutePath);
 	dirName = ask("Hi! Welcome to my first program ever...Please tell me, how do i call your folder? ");
 	if (dirName.length < 1) {
 		console.log("Please Enter a least 1 letter to create a folder");
 		return;
 	} else {
-		mkdir(`C:/Users/luca1/Desktop/${dirName}`, (error) => {
+		mkdir(`${absolutePath}/${dirName}`, (error) => {
 			if (error) {
 				console.log(error);
 			} else {
@@ -101,10 +102,10 @@ const cssOption = function (dirName) {
 		if (quest === "y") {
 			createFile("indexVue", "index", "html");
 			createFile("vue", "main", "js");
-			cssOption(dirName);
+			// cssOption(dirName);
 		} else {
 			createFile("index", "index", "html");
-			cssOption(dirName);
+			// cssOption(dirName);
 		}
 
 	}
