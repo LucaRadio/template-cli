@@ -20,7 +20,7 @@ let fileName;
 const input = cli.input;
 const flags = cli.flags;
 const { clear, debug } = flags;
-const absolutePath = path.resolve("../../");
+const absolutePath = path.resolve("../");
 
 
 
@@ -103,7 +103,7 @@ const cssOption = function (dirName) {
 			createFile("vue", "main", "js");
 			cssOption(dirName);
 		} else {
-			createFile("index", fileName, "html");
+			createFile("index", "index", "html");
 			cssOption(dirName);
 		}
 
