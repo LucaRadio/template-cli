@@ -102,10 +102,10 @@ const cssOption = function (dirName) {
 		if (quest === "y") {
 			createFile("indexVue", "index", "html");
 			createFile("vue", "main", "js");
-			// cssOption(dirName);
+			cssOption(dirName);
 		} else {
 			createFile("index", "index", "html");
-			// cssOption(dirName);
+			cssOption(dirName);
 		}
 
 	}
