@@ -5,17 +5,18 @@
  * Easier and faster way to start coding
  *
  * @author Luca <none>
- */
+*/
 
 const init = require('./utils/init');
 const cli = require('./utils/cli');
 const log = require('./utils/log');
-const { copyFile, mkdir } = require('fs');
+const { copyFile, mkdir, rmdir } = require('fs');
 const path = require('path');
 const ask = require("prompt-sync")({ sigint: true });
+const fs = require('fs');
 
 let dirName;
-let fileName;
+
 
 const input = cli.input;
 const flags = cli.flags;
@@ -33,7 +34,7 @@ const absolutePath = path.resolve("../");
  * @param {string} extenction extension of the file created
  */
 
-const createFile = function (fileNameToCopy, fileName, extenction) {
+function createFile(fileNameToCopy, fileName, extenction) {
 	copyFile(`./script/template/${fileNameToCopy}.${extenction}`, `${absolutePath}/${dirName}/${fileName}.${extenction}`, (error) => {
 		if (error) {
 			console.log(error);
@@ -42,25 +43,60 @@ const createFile = function (fileNameToCopy, fileName, extenction) {
 		}
 	});
 };
-
-
-/**
- * This function ask if you wanna add a css file. It creates a folder and add a css stylesheet with base code
- * @param {*} dirName Directory Name
- */
-
-const cssOption = function (dirName) {
-	const css = ask("Do you want to add CSS file (y/n)");
-	if (css === "y") {
-		mkdir(`${absolutePath}/${dirName}/css`, (error) => {
+function phpFile() {
+	console.log("PHP");
+	const quest = ask("Do you want to add VUE ? (y/n)");
+	if (quest === "y") {
+		createFile("indexVue", "index", "php");
+		createFile("vue", "main", "js");
+	} else if (quest === "n") {
+		createFile("index", "index", "php");
+	} else {
+		rmdir(`${absolutePath}/${dirName}`, (error) => {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log("Successfull Create Directory");
+				console.log("Successfull removed Directory");
 			}
-		});
-		createFile("style", "css/style", "css");
-	}
+		})
+		console.log("Something went wrong.\nRetry!");
+
+	};
+}
+function htmlFile() {
+	console.log("HTML");
+	const quest = ask("Do you want to add VUE ? (y/n)");
+	if (quest === "y") {
+		createFile("indexVue", "index", "html");
+		createFile("vue", "main", "js")
+	} else if (quest === "n") {
+		createFile("index", "index", "html");
+	} else {
+		console.log("Something went wrong.\nRetry!");
+	};
+
+}
+function cssFile() {
+	mkdir(`${absolutePath}/${dirName}/css`, (error) => {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Successfull Create Directory");
+		}
+	});
+	createFile("style", "css/style", "css");
+
+};
+function jsFile() {
+	mkdir(`${absolutePath}/${dirName}/js`, (error) => {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Successfull Create Directory");
+		}
+	});
+	createFile("main", "js/main", "js");
+
 };
 
 
@@ -70,8 +106,23 @@ const cssOption = function (dirName) {
 	init({ clear });
 	input.includes(`help`) && cli.showHelp(0);
 	debug && log(flags);
-	console.log(absolutePath);
-	dirName = ask("Hi! Welcome to my first program ever...Please tell me, how do i call your folder? ");
+	if (input.includes("remove")) {
+		fileToRemove = ask("What Directory do you want to remove? (Insert right name) ");
+		fs.rmdir(`${absolutePath}/${fileToRemove}`, { recursive: true }, (error) => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("Successfull Remove Directory");
+			}
+		});
+		return;
+	} else {
+
+		dirName = ask("Hi! Welcome to my first program ever...Please tell me, how do i call your folder? ");
+	}
+
+
+
 	if (dirName.length < 1) {
 		console.log("Please Enter a least 1 letter to create a folder");
 		return;
@@ -83,32 +134,22 @@ const cssOption = function (dirName) {
 				console.log("Successfull Create Directory");
 			}
 		});
+		let stringLanguage = ask("What file do you wanna create ? (html/php/js/css) ");
+		stringLanguage = stringLanguage.split(" ");
+		stringLanguage.forEach(element => {
+			console.log(element);
+			if (element === "html" || element === "HTML") {
+				htmlFile()
+			} else if (element === "php" || element === "PHP") {
+				phpFile();
+			} else if (element === "css" || element === "CSS") {
+				cssFile();
+			} else if (element === "js" || element === "JS" || element === "javascript") {
+				jsFile();
+			}
+		});
 	}
 
-
-	if (input.includes("php")) {
-		const quest = ask("Do you want to add VUE ? (y/n)");
-		if (quest === "y") {
-			createFile("indexVue", "index", "php");
-			createFile("vue", "main", "js");
-		} else {
-			createFile("index", "index", "php");
-		}
-
-	}
-
-	if (input.includes("html")) {
-		const quest = ask("Do you want to add VUE ? (y/n)");
-		if (quest === "y") {
-			createFile("indexVue", "index", "html");
-			createFile("vue", "main", "js");
-			cssOption(dirName);
-		} else {
-			createFile("index", "index", "html");
-			cssOption(dirName);
-		}
-
-	}
 
 
 
